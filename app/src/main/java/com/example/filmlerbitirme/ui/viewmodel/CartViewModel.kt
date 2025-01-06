@@ -1,56 +1,66 @@
 package com.example.filmlerbitirme.ui.viewmodel
 
-import android.util.Log
 import com.example.filmlerbitirme.data.repo.MovieDaoRepository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.filmlerbitirme.data.entity.CartMovie
-import com.example.filmlerbitirme.data.entity.Movies
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-
-
-class CartViewModel @Inject constructor(private val repository: MovieDaoRepository): ViewModel() {
-    val cartList = MutableLiveData<List<CartMovie>>()
+class CartViewModel @Inject constructor(
+    private val repository: MovieDaoRepository,
+    private val sharedCartManager: SharedCartManager
+) : ViewModel() {
+    private val _cartList = MutableLiveData<List<CartMovie>>()
+    val cartList: LiveData<List<CartMovie>> = _cartList
 
     init {
         loadCartMovies()
-    }
-
-    private fun loadCartMovies() {
-        CoroutineScope(Dispatchers.Main).launch {
-            cartList.value = repository.getCartMovies("sinem")
+        viewModelScope.launch {
+            // Listen for cart updates
+            sharedCartManager.cartUpdated.collect {
+                loadCartMovies()
+            }
         }
     }
+
+    fun loadCartMovies() {
+        viewModelScope.launch {
+            try {
+                val movies = repository.getCartMovies("sinem")
+                _cartList.postValue(movies.ifEmpty { emptyList() })
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _cartList.postValue(emptyList()) // Boş listeyle güncelle
+            }
+        }
+    }
+
 
     fun deleteFromCart(cartId: Int, userName: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            repository.deleteFromCart(cartId, userName)
-            loadCartMovies()
-
+        viewModelScope.launch {
+            try {
+                repository.deleteFromCart(cartId, userName)
+                loadCartMovies() // Listeyi güncelle
+                sharedCartManager.notifyCartUpdated() // Sepet güncellemesini bildir
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
+
     fun updateQuantity(cartMovie: CartMovie, newQuantity: Int) {
-        if (newQuantity <= 0) {
-            deleteFromCart(cartMovie.cartId, cartMovie.userName)
-            return
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             try {
-                // First delete the existing item
-                repository.deleteFromCart(cartMovie.cartId, cartMovie.userName)
+                if (newQuantity <= 0) {
+                    deleteFromCart(cartMovie.cartId, cartMovie.userName)
+                    return@launch
+                }
 
-                // Then add a new item with updated quantity
+                repository.deleteFromCart(cartMovie.cartId, cartMovie.userName)
                 repository.addToCart(
                     cartMovie.name,
                     cartMovie.image,
@@ -64,12 +74,11 @@ class CartViewModel @Inject constructor(private val repository: MovieDaoReposito
                     cartMovie.userName
                 )
 
-                // Refresh the cart
                 loadCartMovies()
+                sharedCartManager.notifyCartUpdated()
             } catch (e: Exception) {
-                // Handle error
                 e.printStackTrace()
-                loadCartMovies() // Reload cart in case of error
+                loadCartMovies()
             }
         }
     }

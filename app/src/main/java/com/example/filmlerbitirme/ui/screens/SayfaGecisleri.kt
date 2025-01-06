@@ -49,9 +49,8 @@ fun SayfaGecisleri(
             CartScreen(
                 navController = navController,
                 viewModel = cartViewModel,
-                detailViewModel = detailViewModel,
-                cartViewModel = cartViewModel
             )
+            //cartViewModel.loadCartMovies()
         }
         composable("profil") {
             Profile(navController = navController)

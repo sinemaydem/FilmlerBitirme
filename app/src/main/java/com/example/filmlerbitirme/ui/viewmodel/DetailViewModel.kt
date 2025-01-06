@@ -7,29 +7,28 @@ import com.example.filmlerbitirme.data.repo.MovieDaoRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.filmlerbitirme.data.entity.CartMovie
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DetailViewModel @Inject constructor(var repository: MovieDaoRepository) : ViewModel() {
+class DetailViewModel @Inject constructor(
+    var repository: MovieDaoRepository,
+    private val sharedCartManager: SharedCartManager
+) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // Sepetteki ürünlerin listesini tutmak için LiveData
     private val _cartList = MutableLiveData<List<CartMovie>>()
     val cartList: LiveData<List<CartMovie>> = _cartList
 
+    init {
+        loadCartMovies("sinem")
+    }
+
     private fun loadCartMovies(userName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 val movies = repository.getCartMovies(userName)
-                withContext(Dispatchers.Main) {
-                    _cartList.value = movies
-                }
+                _cartList.postValue(movies)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -48,16 +47,14 @@ class DetailViewModel @Inject constructor(var repository: MovieDaoRepository) : 
         orderAmount: Int,
         userName: String
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 _isLoading.postValue(true)
 
-                // Mevcut sepetteki ürünleri kontrol et
                 val cartMovies = repository.getCartMovies(userName)
                 val existingMovie = cartMovies.find { it.name == name }
 
                 if (existingMovie != null) {
-                    // Ürün varsa, miktarı güncelle
                     repository.deleteFromCart(existingMovie.cartId, userName)
                     repository.addToCart(
                         name,
@@ -72,7 +69,6 @@ class DetailViewModel @Inject constructor(var repository: MovieDaoRepository) : 
                         userName
                     )
                 } else {
-                    // Yeni bir ürün ekle
                     repository.addToCart(
                         name,
                         image,
@@ -87,9 +83,9 @@ class DetailViewModel @Inject constructor(var repository: MovieDaoRepository) : 
                     )
                 }
 
-                // Sepeti yeniden yükle
                 loadCartMovies(userName)
-
+                // Notify cart update
+                sharedCartManager.notifyCartUpdated()
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {

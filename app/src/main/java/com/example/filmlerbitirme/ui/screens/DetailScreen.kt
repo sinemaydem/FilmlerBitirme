@@ -29,14 +29,13 @@ import coil.compose.rememberImagePainter
 import com.example.filmlerbitirme.data.entity.Movies
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     gelenFilm: Movies,
     detailViewModel: DetailViewModel
 ) {
-    val isLoading by detailViewModel.isLoading.observeAsState(false)
+    val isLoading by detailViewModel.isLoading.observeAsState(initial = false)
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(gelenFilm.name) }) }
@@ -90,7 +89,6 @@ fun DetailScreen(
                 }
             }
         }
-
 
         if (isLoading) {
             Box(

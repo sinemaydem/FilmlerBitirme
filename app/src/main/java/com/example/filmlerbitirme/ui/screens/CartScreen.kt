@@ -23,63 +23,42 @@ import com.example.filmlerbitirme.data.entity.CartMovie
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
     navController: NavController,
-    viewModel: CartViewModel,
-    detailViewModel: DetailViewModel,
-    cartViewModel: CartViewModel
+    viewModel: CartViewModel
 ) {
-    val cartMovies by detailViewModel.cartList.observeAsState(cartViewModel.cartList.value ?: emptyList())
-    var totalPrice by remember { mutableStateOf(0) }
-
-
-    LaunchedEffect(cartMovies) {
-
-        totalPrice = cartMovies.sumOf { it.price * it.orderAmount }
-    }
+    val cartMovies by viewModel.cartList.observeAsState(emptyList())
+    val totalPrice = cartMovies.sumOf { it.price * it.orderAmount }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Cart") },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        try {
-                            navController.navigateUp()
-                        } catch (e: Exception) {
-                            navController.navigate("anasayfa") {
-                                popUpTo("anasayfa") { inclusive = true }
-                            }
-                        }
-                    }) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
         bottomBar = {
-            BottomAppBar {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Total: $${totalPrice}",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Button(
-                        onClick = {
-
-                        },
-                        enabled = cartMovies.isNotEmpty()
+            if (cartMovies.isNotEmpty()) {
+                BottomAppBar {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Checkout")
+                        Text(text = "Total: $$totalPrice", style = MaterialTheme.typography.titleMedium)
+                        Button(
+                            onClick = { /* Checkout logic */ },
+                            enabled = cartMovies.isNotEmpty()
+                        ) {
+                            Text("Checkout")
+                        }
                     }
                 }
             }
@@ -92,41 +71,26 @@ fun CartScreen(
         ) {
             if (cartMovies.isEmpty()) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Your cart is empty",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Text("Your cart is empty", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = {
-                            navController.navigate("anasayfa") {
-                                popUpTo("anasayfa") { inclusive = true }
-                            }
-                        }
-                    ) {
+                    Button(onClick = { navController.navigate("anasayfa") }) {
                         Text("Continue Shopping")
                     }
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(16.dp)
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(cartMovies) { cartMovie ->
                         CartMovieItem(
                             cartMovie = cartMovie,
-                            onDeleteClick = {
-                                viewModel.deleteFromCart(cartMovie.cartId, cartMovie.userName)
-                            },
-                            onQuantityChange = { newQuantity ->
-                                viewModel.updateQuantity(cartMovie, newQuantity)
-                            }
+                            onDeleteClick = { viewModel.deleteFromCart(cartMovie.cartId, cartMovie.userName) },
+                            onQuantityChange = { newQuantity -> viewModel.updateQuantity(cartMovie, newQuantity) }
                         )
                     }
                 }
