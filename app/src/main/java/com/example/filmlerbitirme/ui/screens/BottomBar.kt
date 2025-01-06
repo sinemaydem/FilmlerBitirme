@@ -1,0 +1,61 @@
+package com.example.filmlerbitirme.ui.screens
+
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.filmlerbitirme.R
+
+@Composable
+fun BottomBar(
+    navController: NavController,
+    onNavigateToCart: () -> Unit
+) {
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
+
+    NavigationBar {
+        NavigationBarItem(
+            selected = currentDestination?.route == "anasayfa",
+            onClick = {
+                navController.navigate("anasayfa") {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
+            label = { Text(text = "Anasayfa") },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.anasayfa_resim),
+                    contentDescription = "Anasayfa"
+                )
+            }
+        )
+
+        NavigationBarItem(
+            selected = currentDestination?.route == "sepet",
+            onClick = { onNavigateToCart() },
+            label = { Text(text = "Sepet") },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.sepet_resim),
+                    contentDescription = "Sepet"
+                )
+            }
+        )
+    }
+}
