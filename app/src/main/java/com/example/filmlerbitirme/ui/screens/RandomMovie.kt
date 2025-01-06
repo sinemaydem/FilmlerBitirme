@@ -46,7 +46,7 @@ fun RandomMovieScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Ne İzlenir?") })
+            TopAppBar(title = { Text("Ne İzlesek?") })
         }
     ) { paddingValues ->
         Column(

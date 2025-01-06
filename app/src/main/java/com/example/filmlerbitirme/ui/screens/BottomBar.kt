@@ -47,6 +47,23 @@ fun BottomBar(
         )
 
         NavigationBarItem(
+            selected = currentDestination?.route == "randomMovie",
+            onClick = {
+                navController.navigate("randomMovie") {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
+            label = { Text(text = "Filmler") },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.random_movie),
+                    contentDescription = "Filmler"
+                )
+            }
+        )
+
+        NavigationBarItem(
             selected = currentDestination?.route == "sepet",
             onClick = { onNavigateToCart() },
             label = { Text(text = "Sepet") },

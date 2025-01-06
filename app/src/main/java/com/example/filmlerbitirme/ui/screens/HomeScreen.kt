@@ -83,12 +83,6 @@ fun HomeScreen(
                             contentDescription = "Profil"
                         )
                     }
-                    IconButton(onClick = { navController.navigate("randomMovie") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.random),
-                            contentDescription = "Random Movie"
-                        )
-                    }
 
                 }
             )
