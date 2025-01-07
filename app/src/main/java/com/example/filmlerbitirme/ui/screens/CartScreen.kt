@@ -1,6 +1,6 @@
 package com.example.filmlerbitirme.ui.screens
 
-
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +23,8 @@ import com.example.filmlerbitirme.data.entity.CartMovie
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
@@ -30,7 +32,12 @@ fun CartScreen(
     viewModel: CartViewModel
 ) {
     val cartMovies by viewModel.cartList.observeAsState(emptyList())
-    val totalPrice = cartMovies.sumOf { it.price * it.orderAmount }
+    val totalPrice by remember { mutableStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        Log.d("CartDebug", "CartScreen composed")
+        viewModel.loadCartMovies()
+    }
 
     Scaffold(
         topBar = {

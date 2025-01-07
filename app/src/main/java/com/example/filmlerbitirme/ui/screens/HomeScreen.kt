@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -30,17 +31,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,6 +75,16 @@ fun HomeScreen(
     viewModel: HomeViewModel
 ) {
     val movies by viewModel.moviesList.observeAsState(emptyList())
+    val categories = listOf("All", "Science Fiction", "Action", "Drama", "Fantastic")
+
+    var selectedCategory by remember { mutableStateOf("All") }
+    var searchText by remember { mutableStateOf("") }
+    var sortByRating by remember { mutableStateOf(false) }
+
+    val filteredMovies = movies
+        .filter { it.category == selectedCategory || selectedCategory == "All" }
+        .filter { it.name.contains(searchText, ignoreCase = true) }
+        .let { if (sortByRating) it.sortedByDescending { movie -> movie.rating } else it }
 
     LaunchedEffect(true) {
         viewModel.getAllMovies()
@@ -74,18 +92,52 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Movies") },
-                actions = {
-                    IconButton(onClick = { navController.navigate("profil") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.profil),
-                            contentDescription = "Profil"
+            Column {
+                TopAppBar(
+                    title = { Text("Movies") },
+                    actions = {
+                        IconButton(onClick = { navController.navigate("profil") }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.profil),
+                                contentDescription = "Profil"
+                            )
+                        }
+                    }
+                )
+                TextField(
+                    value = searchText,
+                    onValueChange = { searchText = it },
+                    label = { Text("Search movies...") },
+                    leadingIcon = {
+                        Icon(Icons.Default.Search, contentDescription = "Search Icon")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+
+                TabRow(selectedTabIndex = categories.indexOf(selectedCategory)) {
+                    categories.forEachIndexed { index, category ->
+                        Tab(
+                            selected = selectedCategory == category,
+                            onClick = { selectedCategory = category },
+                            text = { Text(category) }
                         )
                     }
-
                 }
-            )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Sort by rating")
+                    Switch(
+                        checked = sortByRating,
+                        onCheckedChange = { sortByRating = it }
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -93,7 +145,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            items(movies) { movie ->
+            items(filteredMovies) { movie ->
                 MovieCard(
                     movie = movie,
                     onMovieClick = {
@@ -152,3 +204,4 @@ fun MovieCard(
         }
     }
 }
+

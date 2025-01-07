@@ -1,5 +1,6 @@
 package com.example.filmlerbitirme.ui.viewmodel
 
+import android.util.Log
 import com.example.filmlerbitirme.data.repo.MovieDaoRepository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,10 +31,11 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val movies = repository.getCartMovies("sinem")
+                Log.d("CartDebug", "Cart movies loaded: ${movies.size}")
                 _cartList.postValue(movies.ifEmpty { emptyList() })
             } catch (e: Exception) {
-                e.printStackTrace()
-                _cartList.postValue(emptyList()) // Boş listeyle güncelle
+                Log.e("CartDebug", "Error loading cart", e)
+                _cartList.postValue(emptyList())
             }
         }
     }

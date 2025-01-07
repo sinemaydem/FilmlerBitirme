@@ -104,5 +104,6 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
+    implementation ("androidx.compose.material3:material3:1.2.0-alpha05")
 
 }
