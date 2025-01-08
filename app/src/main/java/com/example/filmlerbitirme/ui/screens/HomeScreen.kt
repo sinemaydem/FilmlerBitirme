@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
@@ -60,6 +62,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -82,13 +85,22 @@ fun HomeScreen(
 
     var selectedCategory by remember { mutableStateOf("All") }
     var searchText by remember { mutableStateOf("") }
-    var sortByRating by remember { mutableStateOf(false) }
+    var sortOption by remember { mutableStateOf("None") }
     var isDropdownExpanded by remember { mutableStateOf(false) }
+    var isFilterMenuExpanded by remember { mutableStateOf(false) }
 
     val filteredMovies = movies
         .filter { it.category == selectedCategory || selectedCategory == "All" }
         .filter { it.name.contains(searchText, ignoreCase = true) }
-        .let { if (sortByRating) it.sortedByDescending { movie -> movie.rating } else it }
+        .let {
+            when (sortOption) {
+                "Rating Ascending" -> it.sortedBy { movie -> movie.rating }
+                "Rating Descending" -> it.sortedByDescending { movie -> movie.rating }
+                "Price Ascending" -> it.sortedBy { movie -> movie.price }
+                "Price Descending" -> it.sortedByDescending { movie -> movie.price }
+                else -> it
+            }
+        }
 
     LaunchedEffect(true) {
         viewModel.getAllMovies()
@@ -97,10 +109,15 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             Column {
+                Spacer(modifier = Modifier.height(23.dp))
                 TopAppBar(
-                    title = { Text("WatchWithUs",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()) },
+                    title = {
+                        Text(
+                            "WatchWithUs",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
                     actions = {
                         IconButton(onClick = { navController.navigate("profil") }) {
                             Icon(
@@ -141,14 +158,29 @@ fun HomeScreen(
                             }
                         }
                     }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                    IconButton(onClick = { isFilterMenuExpanded = true }) {
+                        Icon(Icons.Default.List, contentDescription = "Filter Icon")
+                    }
+                    DropdownMenu(
+                        expanded = isFilterMenuExpanded,
+                        onDismissRequest = { isFilterMenuExpanded = false },
+                        modifier = Modifier.wrapContentWidth(Alignment.End),
+                        offset = DpOffset(-80.dp, 0.dp)
                     ) {
-                        Text("Sort by rating")
-                        Switch(
-                            checked = sortByRating,
-                            onCheckedChange = { sortByRating = it }
-                        )
+                        listOf(
+                            "Rating Ascending",
+                            "Rating Descending",
+                            "Price Ascending",
+                            "Price Descending"
+                        ).forEach { option ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    sortOption = option
+                                    isFilterMenuExpanded = false
+                                },
+                                text = { Text(option) }
+                            )
+                        }
                     }
                 }
                 TextField(
@@ -165,10 +197,14 @@ fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        LazyColumn(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
+            contentPadding = PaddingValues(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(filteredMovies) { movie ->
                 MovieCard(
@@ -183,8 +219,6 @@ fun HomeScreen(
     }
 }
 
-
-
 @Composable
 fun MovieCard(
     movie: Movies,
@@ -197,38 +231,29 @@ fun MovieCard(
             .clickable(onClick = onMovieClick),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
                 model = "http://kasimadalan.pe.hu/movies/images/${movie.image}",
                 contentDescription = null,
+                alignment = Alignment.Center,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(120.dp)
                     .clip(RoundedCornerShape(8.dp))
             )
-
-            Column(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .weight(1f)
-            ) {
-                Text(
-                    text = movie.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = "Director: ${movie.director}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = "$${movie.price}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = movie.name,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "$${movie.price}",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
-
