@@ -26,6 +26,8 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,6 +82,7 @@ fun HomeScreen(
     var selectedCategory by remember { mutableStateOf("All") }
     var searchText by remember { mutableStateOf("") }
     var sortByRating by remember { mutableStateOf(false) }
+    var isDropdownExpanded by remember { mutableStateOf(false) }
 
     val filteredMovies = movies
         .filter { it.category == selectedCategory || selectedCategory == "All" }
@@ -104,6 +107,47 @@ fun HomeScreen(
                         }
                     }
                 )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Category: $selectedCategory",
+                            modifier = Modifier
+                                .clickable { isDropdownExpanded = true }
+                                .padding(8.dp)
+                        )
+                        DropdownMenu(
+                            expanded = isDropdownExpanded,
+                            onDismissRequest = { isDropdownExpanded = false }
+                        ) {
+                            categories.forEach { category ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedCategory = category
+                                        isDropdownExpanded = false
+                                    },
+                                    text = { Text(category) }
+                                )
+                            }
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Sort by rating")
+                        Switch(
+                            checked = sortByRating,
+                            onCheckedChange = { sortByRating = it }
+                        )
+                    }
+                }
                 TextField(
                     value = searchText,
                     onValueChange = { searchText = it },
@@ -115,28 +159,6 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .padding(8.dp)
                 )
-
-                TabRow(selectedTabIndex = categories.indexOf(selectedCategory)) {
-                    categories.forEachIndexed { index, category ->
-                        Tab(
-                            selected = selectedCategory == category,
-                            onClick = { selectedCategory = category },
-                            text = { Text(category) }
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Sort by rating")
-                    Switch(
-                        checked = sortByRating,
-                        onCheckedChange = { sortByRating = it }
-                    )
-                }
             }
         }
     ) { paddingValues ->
@@ -157,6 +179,8 @@ fun HomeScreen(
         }
     }
 }
+
+
 
 @Composable
 fun MovieCard(

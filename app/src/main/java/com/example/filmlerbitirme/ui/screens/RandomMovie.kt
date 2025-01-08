@@ -61,7 +61,7 @@ fun RandomMovieScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(600.dp)
+                    .height(400.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .clickable {
                         randomMovie?.let { movie ->
