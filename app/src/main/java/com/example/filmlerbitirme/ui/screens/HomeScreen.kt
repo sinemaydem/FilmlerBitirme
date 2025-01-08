@@ -59,6 +59,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -97,7 +98,9 @@ fun HomeScreen(
         topBar = {
             Column {
                 TopAppBar(
-                    title = { Text("Movies") },
+                    title = { Text("WatchWithUs",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()) },
                     actions = {
                         IconButton(onClick = { navController.navigate("profil") }) {
                             Icon(

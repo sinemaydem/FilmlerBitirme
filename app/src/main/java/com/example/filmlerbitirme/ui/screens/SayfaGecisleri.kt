@@ -43,6 +43,7 @@ fun SayfaGecisleri(
             DetailScreen(
                 gelenFilm = nesne,
                 detailViewModel = detailViewModel,
+                onBackClick = { navController.popBackStack() }
             )
         }
         composable("sepet") {
