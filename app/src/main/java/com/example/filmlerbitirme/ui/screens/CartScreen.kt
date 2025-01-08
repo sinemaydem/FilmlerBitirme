@@ -32,12 +32,13 @@ fun CartScreen(
     viewModel: CartViewModel
 ) {
     val cartMovies by viewModel.cartList.observeAsState(emptyList())
-    val totalPrice by remember { mutableStateOf(0) }
+    val totalPrice = cartMovies.sumOf { it.price * it.orderAmount }
 
     LaunchedEffect(Unit) {
         Log.d("CartDebug", "CartScreen composed")
         viewModel.loadCartMovies()
     }
+
 
     Scaffold(
         topBar = {

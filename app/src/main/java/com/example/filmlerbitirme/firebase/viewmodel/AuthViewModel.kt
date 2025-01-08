@@ -1,14 +1,17 @@
 package com.example.filmlerbitirme.firebase.viewmodel
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 
 
 class AuthViewModel : ViewModel() {
 
-    private val auth : FirebaseAuth = FirebaseAuth.getInstance()
+    val auth : FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
@@ -63,6 +66,32 @@ class AuthViewModel : ViewModel() {
     fun signout(){
         auth.signOut()
         _authState.value = AuthState.Unauthenticated
+    }
+
+    fun changePassword(currentPassword: String, newPassword: String, context: Context) {
+        val user = auth.currentUser
+        val email = user?.email
+
+        if (email != null) {
+            val credential = EmailAuthProvider.getCredential(email, currentPassword)
+            user.reauthenticate(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        user.updatePassword(newPassword)
+                            .addOnCompleteListener { updateTask ->
+                                if (updateTask.isSuccessful) {
+                                    Toast.makeText(context, "Şifre başarıyla güncellendi", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(context, "Şifre güncelleme başarısız", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(context, "Mevcut şifre hatalı", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        } else {
+            Toast.makeText(context, "Kullanıcı bilgisi alınamadı", Toast.LENGTH_SHORT).show()
+        }
     }
 
 

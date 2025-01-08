@@ -121,5 +121,11 @@ fun SayfaGecisleri(
                 movieDaoRepository = movieDaoRepository
             )
         }
+        composable("change_password") {
+            ChangePasswordScreen(
+                authViewModel = authViewModel,
+                navController = navController)
+        }
+
     }
 }

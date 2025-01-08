@@ -21,7 +21,7 @@ fun MainScreen(
     detailViewModel: DetailViewModel,
     cartViewModel: CartViewModel,
     movieDaoRepository: MovieDaoRepository,
-    authViewModel: AuthViewModel  // Added authViewModel parameter
+    authViewModel: AuthViewModel
 ) {
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -29,6 +29,9 @@ fun MainScreen(
     val showBottomBar = when (currentRoute) {
         "detaySayfa/{film}" -> false
         "profil" -> false
+        "login" -> false
+        "signup" -> false
+        "change_password" -> false
         null -> true
         else -> true
     }
@@ -49,7 +52,7 @@ fun MainScreen(
         }
     ) { innerPadding ->
         SayfaGecisleri(
-            authViewModel = authViewModel,  // Pass authViewModel to SayfaGecisleri
+            authViewModel = authViewModel,
             homeViewModel = homeViewModel,
             detailViewModel = detailViewModel,
             cartViewModel = cartViewModel,
