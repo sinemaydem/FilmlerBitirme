@@ -25,10 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(navController: NavController) {
+fun Profile(
+    navController: NavController,
+    authViewModel: AuthViewModel  // AuthViewModel eklendi
+) {
     val userName = "Sinem"
     val userSurname = "Aydemir"
     val email = "sinem0aydemir@gmail.com"
@@ -52,7 +56,6 @@ fun Profile(navController: NavController) {
                     }
                 },
                 actions = {
-                    // Empty spacer to center the title
                     Spacer(Modifier.width(68.dp))
                 }
             )
@@ -65,7 +68,6 @@ fun Profile(navController: NavController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Profil Resmi",
@@ -74,7 +76,6 @@ fun Profile(navController: NavController) {
                     .padding(8.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-
 
             Text(
                 text = "$userName $userSurname",
@@ -88,9 +89,8 @@ fun Profile(navController: NavController) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-
             Button(
-                onClick = {  },
+                onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
@@ -99,7 +99,12 @@ fun Profile(navController: NavController) {
             }
 
             OutlinedButton(
-                onClick = {  },
+                onClick = {
+                    authViewModel.signout()
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }  // Tüm back stack'i temizle
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)

@@ -8,7 +8,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.filmlerbitirme.data.datasource.MoviesDataSource
 import com.example.filmlerbitirme.data.repo.MovieDaoRepository
+import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 import com.example.filmlerbitirme.retrofit.MoviesDaoInterface
 import com.example.filmlerbitirme.ui.screens.BottomBar
 import com.example.filmlerbitirme.ui.screens.HomeScreen
@@ -31,24 +34,29 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val authViewModel: AuthViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
-    private val detailViewModel: DetailViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
+    private val detailViewModel: DetailViewModel by viewModels()
 
     @Inject
-    lateinit var movieDaoRepository: MovieDaoRepository // Hilt Enjection
+    lateinit var movieDaoRepository: MovieDaoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         setContent {
             FilmlerBitirmeTheme {
-                MainScreen(
-                    homeViewModel = homeViewModel,
-                    detailViewModel = detailViewModel,
-                    cartViewModel = cartViewModel,
-                    movieDaoRepository = movieDaoRepository
-                )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    MainScreen(
+                        authViewModel = authViewModel,
+                        homeViewModel = homeViewModel,
+                        detailViewModel = detailViewModel,
+                        cartViewModel = cartViewModel,
+                        movieDaoRepository = movieDaoRepository
+                    )
+                }
             }
         }
     }

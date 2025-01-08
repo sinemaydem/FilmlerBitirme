@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.filmlerbitirme.data.repo.MovieDaoRepository
+import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
@@ -19,12 +20,12 @@ fun MainScreen(
     homeViewModel: HomeViewModel,
     detailViewModel: DetailViewModel,
     cartViewModel: CartViewModel,
-    movieDaoRepository: MovieDaoRepository
+    movieDaoRepository: MovieDaoRepository,
+    authViewModel: AuthViewModel  // Added authViewModel parameter
 ) {
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
-    // Determine if bottom bar should be shown
     val showBottomBar = when (currentRoute) {
         "detaySayfa/{film}" -> false
         "profil" -> false
@@ -48,6 +49,7 @@ fun MainScreen(
         }
     ) { innerPadding ->
         SayfaGecisleri(
+            authViewModel = authViewModel,  // Pass authViewModel to SayfaGecisleri
             homeViewModel = homeViewModel,
             detailViewModel = detailViewModel,
             cartViewModel = cartViewModel,
