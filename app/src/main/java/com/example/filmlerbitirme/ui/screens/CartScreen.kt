@@ -1,6 +1,7 @@
 package com.example.filmlerbitirme.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,8 +15,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
@@ -23,7 +27,6 @@ import com.example.filmlerbitirme.data.entity.CartMovie
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,39 +42,83 @@ fun CartScreen(
         viewModel.loadCartMovies()
     }
 
-
     Scaffold(
-
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         topBar = {
-            TopAppBar(
-                title = { Text("Cart") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
+            Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
+                Spacer(modifier = Modifier.height(23.dp))
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Cart",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+            }
         },
         bottomBar = {
-            if (cartMovies.isNotEmpty()) {
-                BottomAppBar {
+            BottomAppBar(
+                modifier = Modifier.height(100.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Total: $$totalPrice", style = MaterialTheme.typography.titleMedium)
-                        Button(
-                            onClick = { /* Checkout logic */ },
-                            enabled = cartMovies.isNotEmpty()
-                        ) {
-                            Text("Checkout")
-                        }
+                        Text(
+                            text = "Total:",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontSize = 23.sp
+                        )
+                        Text(
+                            text = "$$totalPrice",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 23.sp
+                        )
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        onClick = {
+                            navController.navigate("checkout_screen/$totalPrice")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(70.dp),
+                        shape = RoundedCornerShape(20.dp),
+                    ) {
+                        Text(
+                            "Checkout",
+                            fontSize = 20.sp
+                        )
+                    }
+
                 }
             }
         }
+
+
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -84,7 +131,10 @@ fun CartScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Your cart is empty", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Your cart is empty",
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { navController.navigate("anasayfa") }) {
                         Text("Continue Shopping")
@@ -96,18 +146,31 @@ fun CartScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(cartMovies) { cartMovie ->
-                        CartMovieItem(
-                            cartMovie = cartMovie,
-                            onDeleteClick = { viewModel.deleteFromCart(cartMovie.cartId, cartMovie.userName) },
-                            onQuantityChange = { newQuantity -> viewModel.updateQuantity(cartMovie, newQuantity) }
-                        )
+                        Column {
+                            CartMovieItem(
+                                cartMovie = cartMovie,
+                                onDeleteClick = {
+                                    viewModel.deleteFromCart(
+                                        cartMovie.cartId,
+                                        cartMovie.userName
+                                    )
+                                },
+                                onQuantityChange = { newQuantity ->
+                                    viewModel.updateQuantity(cartMovie, newQuantity)
+                                }
+                            )
+                            Divider(
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
+                                thickness = 1.dp,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun CartMovieItem(
@@ -118,7 +181,10 @@ fun CartMovieItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
     ) {
         Row(
             modifier = Modifier
@@ -131,10 +197,9 @@ fun CartMovieItem(
                 model = "http://kasimadalan.pe.hu/movies/images/${cartMovie.image}",
                 contentDescription = null,
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(100.dp)
                     .clip(MaterialTheme.shapes.small)
             )
-
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -142,11 +207,15 @@ fun CartMovieItem(
             ) {
                 Text(
                     text = cartMovie.name,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "$${cartMovie.price}",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontSize = 16.sp
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -169,9 +238,24 @@ fun CartMovieItem(
                     }
                 }
             }
-
-            IconButton(onClick = onDeleteClick) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete")
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "$${cartMovie.price * cartMovie.orderAmount}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                IconButton(
+                    onClick = onDeleteClick,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = Color.Red
+                    )
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                }
             }
         }
     }

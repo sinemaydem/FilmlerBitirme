@@ -129,5 +129,16 @@ fun SayfaGecisleri(
                 navController = navController
             )
         }
+        composable(
+            route = "checkout_screen/{totalPrice}",
+            arguments = listOf(navArgument("totalPrice") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toDoubleOrNull() ?: 0.0
+            CheckoutScreen(navController = navController, totalPrice = totalPrice)
+        }
+        composable("coupons_screen") {
+            CouponsScreen(navController = navController)
+        }
+
     }
 }

@@ -31,7 +31,7 @@ fun BottomBar(
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         NavigationBarItem(
             selected = currentDestination?.route == "anasayfa",
@@ -51,7 +51,7 @@ fun BottomBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = MaterialTheme.colorScheme.primary,
                 selectedTextColor = MaterialTheme.colorScheme.primary,
-                indicatorColor = MaterialTheme.colorScheme.background
+                indicatorColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -73,7 +73,7 @@ fun BottomBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = MaterialTheme.colorScheme.primary,
                 selectedTextColor = MaterialTheme.colorScheme.primary,
-                indicatorColor = MaterialTheme.colorScheme.background
+                indicatorColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -90,7 +90,7 @@ fun BottomBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = MaterialTheme.colorScheme.primary,
                 selectedTextColor = MaterialTheme.colorScheme.primary,
-                indicatorColor = MaterialTheme.colorScheme.background
+                indicatorColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -112,7 +112,7 @@ fun BottomBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = MaterialTheme.colorScheme.primary,
                 selectedTextColor = MaterialTheme.colorScheme.primary,
-                indicatorColor = MaterialTheme.colorScheme.background
+                indicatorColor = MaterialTheme.colorScheme.surface
             )
         )
 
