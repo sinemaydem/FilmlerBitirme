@@ -41,6 +41,7 @@ fun ChangePasswordScreen(authViewModel: AuthViewModel, navController: NavControl
 
     Scaffold(
         topBar = {
+            Spacer(modifier = Modifier.height(23.dp))
             TopAppBar(
                 title = {
                     Text(

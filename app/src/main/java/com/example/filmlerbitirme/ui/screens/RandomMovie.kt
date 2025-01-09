@@ -46,7 +46,7 @@ fun RandomMovieScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Ne İzlesek?") })
+            TopAppBar(title = { Text("FlickPicker") })
         }
     ) { paddingValues ->
         Column(
@@ -57,6 +57,9 @@ fun RandomMovieScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text("Hangi Filmi İzleyeceğiz? Kararı Birlikte Verelim!")
             // Film ya da varsayılan resim gösterimi
             Box(
                 modifier = Modifier
@@ -120,7 +123,7 @@ fun RandomMovieScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text("Rastgele Film Getir")
+                    Text("FlickPicker")
                 }
             }
 

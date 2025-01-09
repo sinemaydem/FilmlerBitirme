@@ -1,5 +1,6 @@
 package com.example.filmlerbitirme.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -107,8 +109,11 @@ fun HomeScreen(
     }
 
     Scaffold(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         topBar = {
-            Column {
+            Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
                 Spacer(modifier = Modifier.height(23.dp))
                 TopAppBar(
                     title = {
@@ -118,15 +123,12 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
                     },
-                    actions = {
-                        IconButton(onClick = { navController.navigate("profil") }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.profil),
-                                contentDescription = "Profil"
-                            )
-                        }
-                    }
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
                 )
+
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,8 +166,8 @@ fun HomeScreen(
                     DropdownMenu(
                         expanded = isFilterMenuExpanded,
                         onDismissRequest = { isFilterMenuExpanded = false },
-                        modifier = Modifier.wrapContentWidth(Alignment.End),
-                        offset = DpOffset(-80.dp, 0.dp)
+                        modifier = Modifier.wrapContentWidth(),
+                        offset = DpOffset(125.dp, 0.dp)
                     ) {
                         listOf(
                             "Rating Ascending",
@@ -201,7 +203,8 @@ fun HomeScreen(
             columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.background),
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -229,7 +232,10 @@ fun MovieCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable(onClick = onMovieClick),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -238,20 +244,24 @@ fun MovieCard(
             AsyncImage(
                 model = "http://kasimadalan.pe.hu/movies/images/${movie.image}",
                 contentDescription = null,
+                contentScale = ContentScale.Inside,
                 alignment = Alignment.Center,
                 modifier = Modifier
-                    .size(120.dp)
+                    .fillMaxWidth()
+                    .height(120.dp)
                     .clip(RoundedCornerShape(8.dp))
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = movie.name,
                 style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "$${movie.price}",
                 style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
         }

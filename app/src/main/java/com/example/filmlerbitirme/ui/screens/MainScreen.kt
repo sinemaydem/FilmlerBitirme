@@ -28,7 +28,6 @@ fun MainScreen(
 
     val showBottomBar = when (currentRoute) {
         "detaySayfa/{film}" -> false
-        "profil" -> false
         "login" -> false
         "signup" -> false
         "change_password" -> false
