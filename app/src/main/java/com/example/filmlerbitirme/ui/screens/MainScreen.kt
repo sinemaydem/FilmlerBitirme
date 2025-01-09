@@ -14,6 +14,7 @@ import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
+import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
 
 @Composable
 fun MainScreen(
@@ -21,17 +22,14 @@ fun MainScreen(
     detailViewModel: DetailViewModel,
     cartViewModel: CartViewModel,
     movieDaoRepository: MovieDaoRepository,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    themeViewModel: ThemeViewModel
 ) {
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     val showBottomBar = when (currentRoute) {
-        "detaySayfa/{film}" -> false
-        "login" -> false
-        "signup" -> false
-        "change_password" -> false
-        null -> true
+        "detaySayfa/{film}", "login", "signup", "change_password" -> false
         else -> true
     }
 
@@ -56,6 +54,7 @@ fun MainScreen(
             detailViewModel = detailViewModel,
             cartViewModel = cartViewModel,
             movieDaoRepository = movieDaoRepository,
+            themeViewModel = themeViewModel,
             modifier = Modifier.padding(
                 bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp,
                 top = innerPadding.calculateTopPadding()

@@ -25,6 +25,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,118 +38,121 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 import com.example.filmlerbitirme.ui.theme.FilmlerBitirmeTheme
+import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Profile(
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    themeViewModel: ThemeViewModel
 ) {
-    val context = LocalContext.current
-    var isDarkMode by remember { mutableStateOf(false) }  // Default to light mode
+    val isDarkModeActive by themeViewModel.isDarkMode.collectAsState()
 
-    FilmlerBitirmeTheme(darkTheme = isDarkMode) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Profil",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Profil",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    },
-                    actions = {
-                        Spacer(Modifier.width(68.dp))
+                    }
+                },
+                actions = {
+                    Spacer(Modifier.width(68.dp))
+                }
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Profil Resmi",
+                modifier = Modifier
+                    .size(120.dp)
+                    .padding(8.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+
+            Text(
+                text = authViewModel.auth.currentUser?.email ?: "E-posta bulunamadı",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Karanlık Mod",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Switch(
+                    checked = isDarkModeActive,
+                    onCheckedChange = { isChecked ->
+                        themeViewModel.setDarkMode(isChecked)
                     }
                 )
             }
-        ) { paddingValues ->
-            Column(
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { },
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Profil Resmi",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .padding(8.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                Text("Satın Alınan Filmler")
+            }
 
-                Text(
-                    text = authViewModel.auth.currentUser?.email ?: "E-posta bulunamadı",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+            Button(
+                onClick = {
+                    navController.navigate("change_password")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text("Şifre Değiştir")
+            }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Karanlık Mod",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Switch(
-                        checked = isDarkMode,
-                        onCheckedChange = {
-                            isDarkMode = it
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Satın Alınan Filmler")
-                }
-
-                Button(
-                    onClick = {
-                        navController.navigate("change_password")
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Şifre Değiştir")
-                }
-
-                OutlinedButton(
-                    onClick = {
-                        authViewModel.signout()
-                        navController.navigate("login") {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Çıkış Yap")
-                }
+            OutlinedButton(
+                onClick = {
+                    authViewModel.signout()
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text("Çıkış Yap")
             }
         }
     }

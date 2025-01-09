@@ -22,6 +22,7 @@ import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
+import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
 import com.google.gson.Gson
 
 @Composable
@@ -29,12 +30,12 @@ fun SayfaGecisleri(
     authViewModel: AuthViewModel,
     homeViewModel: HomeViewModel,
     detailViewModel: DetailViewModel,
+    themeViewModel: ThemeViewModel,
     cartViewModel: CartViewModel,
     movieDaoRepository: MovieDaoRepository,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-
     val authState by authViewModel.authState.observeAsState()
 
     NavHost(
@@ -42,7 +43,6 @@ fun SayfaGecisleri(
         startDestination = "login",
         modifier = modifier
     ) {
-        // Auth routes
         composable("login") {
             when (authState) {
                 is AuthState.Authenticated -> {
@@ -70,7 +70,6 @@ fun SayfaGecisleri(
             )
         }
 
-        // Protected routes
         composable("anasayfa") {
             when (authState) {
                 is AuthState.Unauthenticated -> {
@@ -112,7 +111,9 @@ fun SayfaGecisleri(
         composable("profil") {
             Profile(
                 navController = navController,
-                authViewModel = authViewModel)
+                authViewModel = authViewModel,
+                themeViewModel = themeViewModel
+            )
         }
 
         composable("randomMovie") {
@@ -121,11 +122,12 @@ fun SayfaGecisleri(
                 movieDaoRepository = movieDaoRepository
             )
         }
+
         composable("change_password") {
             ChangePasswordScreen(
                 authViewModel = authViewModel,
-                navController = navController)
+                navController = navController
+            )
         }
-
     }
 }

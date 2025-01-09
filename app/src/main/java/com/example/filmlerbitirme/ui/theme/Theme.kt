@@ -39,7 +39,7 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun FilmlerBitirmeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
