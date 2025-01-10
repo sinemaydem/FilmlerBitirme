@@ -44,6 +44,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -72,6 +73,8 @@ import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.filmlerbitirme.R
 import com.example.filmlerbitirme.data.entity.Movies
+import com.example.filmlerbitirme.ui.theme.background
+import com.example.filmlerbitirme.ui.theme.jersey
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -120,7 +123,11 @@ fun HomeScreen(
                         Text(
                             "WatchWithUs",
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            fontFamily = jersey,
+                            fontSize = 30.sp,
+                            color = MaterialTheme.colorScheme.primary
+
                         )
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -143,7 +150,8 @@ fun HomeScreen(
                             text = "Category: $selectedCategory",
                             modifier = Modifier
                                 .clickable { isDropdownExpanded = true }
-                                .padding(8.dp)
+                                .padding(8.dp),
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                         DropdownMenu(
                             expanded = isDropdownExpanded,
@@ -161,13 +169,18 @@ fun HomeScreen(
                         }
                     }
                     IconButton(onClick = { isFilterMenuExpanded = true }) {
-                        Icon(Icons.Default.List, contentDescription = "Filter Icon")
+                        Icon(Icons.Default.List,
+                            contentDescription = "Filter Icon",
+                            modifier = Modifier.size(24.dp),
+
+                        )
+
                     }
                     DropdownMenu(
                         expanded = isFilterMenuExpanded,
                         onDismissRequest = { isFilterMenuExpanded = false },
                         modifier = Modifier.wrapContentWidth(),
-                        offset = DpOffset(125.dp, 0.dp)
+                        offset = DpOffset(412.dp, 0.dp)
                     ) {
                         listOf(
                             "Rating Ascending",
@@ -194,7 +207,11 @@ fun HomeScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(8.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+
                 )
             }
         }
@@ -234,7 +251,7 @@ fun MovieCard(
             .clickable(onClick = onMovieClick),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Column(

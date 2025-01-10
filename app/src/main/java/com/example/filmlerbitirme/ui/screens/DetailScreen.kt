@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.filmlerbitirme.data.entity.Movies
+import com.example.filmlerbitirme.ui.theme.cairo
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 import kotlinx.coroutines.launch
 
@@ -98,7 +99,8 @@ fun DetailScreen(
                     Text(
                         text = gelenFilm.name,
                         style = MaterialTheme.typography.headlineLarge,
-                        color = Color.Yellow
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Row(
@@ -153,13 +155,15 @@ fun DetailScreen(
                 Text(
                     text = "Director: ${gelenFilm.director}",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = gelenFilm.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -183,12 +187,14 @@ fun DetailScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(25.dp),
+                    .padding(16.dp)
+                    .height(50.dp),
                 enabled = !isLoading
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier
+                            .size(24.dp),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {

@@ -1,6 +1,8 @@
 package com.example.filmlerbitirme.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +25,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,9 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.filmlerbitirme.data.entity.Coupon
+import com.example.filmlerbitirme.ui.theme.jersey
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.OrdersViewModel
 import kotlinx.coroutines.launch
@@ -79,15 +85,43 @@ fun CheckoutScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         topBar = {
-            TopAppBar(
-                title = { Text("Ödeme") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
+            Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
+                Spacer(modifier = Modifier.height(23.dp))
+                TopAppBar(
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 56.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Ödeme",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = jersey,
+                                fontSize = 30.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+            }
         }
     ) { paddingValues ->
         Column(

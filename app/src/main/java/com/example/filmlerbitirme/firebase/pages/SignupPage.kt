@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.filmlerbitirme.firebase.viewmodel.AuthState
 import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
+import com.example.filmlerbitirme.ui.theme.jersey
 
 
 @Composable
@@ -61,7 +63,11 @@ fun SignupPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Signup Page", fontSize = 32.sp)
+        Text(text = "Signup Page",
+            fontSize = 32.sp,
+            fontFamily = jersey,
+            color = MaterialTheme.colorScheme.primary
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

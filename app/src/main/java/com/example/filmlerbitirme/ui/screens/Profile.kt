@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,18 +37,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.filmlerbitirme.R
 import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 import com.example.filmlerbitirme.ui.theme.FilmlerBitirmeTheme
+import com.example.filmlerbitirme.ui.theme.jersey
 import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,11 +69,21 @@ fun Profile(
                 Spacer(modifier = Modifier.height(23.dp))
                 TopAppBar(
                     title = {
-                        Text(
-                            "Profil",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 56.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Profil",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = jersey,
+                                fontSize = 30.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -358,7 +371,7 @@ fun Profile(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedButton(
+            Button(
                 onClick = {
                     authViewModel.signout()
                     navController.navigate("login") {
@@ -367,10 +380,15 @@ fun Profile(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red,
+                    contentColor = Color.White
+                )
             ) {
                 Text("Çıkış Yap")
             }
+
         }
     }
 }

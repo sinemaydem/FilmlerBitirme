@@ -17,8 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,6 +32,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.filmlerbitirme.R
 import com.example.filmlerbitirme.data.entity.Movies
 import com.example.filmlerbitirme.data.repo.MovieDaoRepository
+import com.example.filmlerbitirme.ui.theme.cairo
+import com.example.filmlerbitirme.ui.theme.jersey
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,11 +61,21 @@ fun RandomMovieScreen(
                 Spacer(modifier = Modifier.height(23.dp))
                 TopAppBar(
                     title = {
-                        Text(
-                            "FlickPicker",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 56.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "FlickPicker",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontSize = 30.sp,
+                                fontFamily = jersey,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -86,20 +100,23 @@ fun RandomMovieScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = "Hangi Filmi İzleyeceğiz? ",
+            Text(text = "Hangi Filmi İzleyeceğine Karar Veremedin Mi? ",
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(20.dp)
+                color = MaterialTheme.colorScheme.tertiary,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
             Text(text = " Hadi Birlikte Karar Verelim!",
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(20.dp)
+                color = MaterialTheme.colorScheme.tertiary,
+                fontWeight = FontWeight.Bold,
+
                 )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .height(450.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .clickable {
                         randomMovie?.let { movie ->
@@ -121,7 +138,7 @@ fun RandomMovieScreen(
                         contentDescription = "Film Resmi",
                         modifier = Modifier
                             .fillMaxSize()
-                            .height(300.dp),
+                            .height(400.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -177,15 +194,16 @@ fun RandomMovieScreen(
                         },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(8.dp))
                     Text(text = "Senin İçin Seçtiğimiz Film",
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(20.dp)
+                        fontSize = 23.sp,
+                        modifier = Modifier.padding(10.dp)
                     )
                     Text(
                         text = movie.name,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(20.dp)
+                        fontSize = 23.sp,
+                        modifier = Modifier.padding(10.dp)
                     )
                 }
             }

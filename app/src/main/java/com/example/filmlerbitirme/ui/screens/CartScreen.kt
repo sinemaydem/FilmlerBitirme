@@ -25,6 +25,7 @@ import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.filmlerbitirme.data.entity.CartMovie
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.filmlerbitirme.ui.theme.jersey
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 
@@ -51,11 +52,21 @@ fun CartScreen(
                 Spacer(modifier = Modifier.height(23.dp))
                 TopAppBar(
                     title = {
-                        Text(
-                            "Cart",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 56.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Cart",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = jersey,
+                                fontSize = 30.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
