@@ -1,6 +1,7 @@
 package com.example.filmlerbitirme.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,9 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.filmlerbitirme.R
 import com.example.filmlerbitirme.firebase.viewmodel.AuthViewModel
 import com.example.filmlerbitirme.ui.theme.FilmlerBitirmeTheme
 import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
@@ -53,7 +56,6 @@ fun Profile(
     themeViewModel: ThemeViewModel
 ) {
     val isDarkModeActive by themeViewModel.isDarkMode.collectAsState()
-
 
     Scaffold(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -108,17 +110,173 @@ fun Profile(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
+
+            Text(
+                text = "Hesap",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+
+            // Siparişlerim Kısmı
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = {
+
+
+                    /* Siparişlerim tıklandığında yapılacak işlem */
+
+                    })
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.siparislerim),
+                    contentDescription = "Siparişlerim",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Text(
+                    text = "Siparişlerim",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                )
+
+                Icon(
+                    painter = painterResource(id = R.drawable.git),
+                    contentDescription = "Git",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+
+            //Ödeme Yöntemleri Kısmı
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = {
+
+
+                        /* Ödeme Yöntemleri tıklandığında yapılacak işlem */
+
+                    })
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.odeme),
+                    contentDescription = "Ödeme Yöntemlerim",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Text(
+                    text = "Ödeme Yöntemlerim",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                )
+
+                Icon(
+                    painter = painterResource(id = R.drawable.git),
+                    contentDescription = "Git",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+
+            // Kuponlarım Kısmı
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = {
+                        navController.navigate("coupons_screen")
+
+                    })
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ticket),
+                    contentDescription = "Kuponlarım",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Text(
+                    text = "Kuponlarım",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                )
+
+                Icon(
+                    painter = painterResource(id = R.drawable.git),
+                    contentDescription = "Git",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+
+            // Ayarlar Kısmı
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Ayarlar",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+
+            // Karanlık Mod
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = { /* Tıklama işlemi istenirse eklenebilir */ })
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = if (isDarkModeActive) R.drawable.sun else R.drawable.moon
+                    ),
+                    contentDescription = if (isDarkModeActive) "Aydınlık Mod" else "Karanlık Mod",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
                 Text(
                     text = "Karanlık Mod",
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
                 )
+
                 Switch(
                     checked = isDarkModeActive,
                     onCheckedChange = { isChecked ->
@@ -127,27 +285,80 @@ fun Profile(
                 )
             }
 
+
+            // Dil Seçenekleri
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = { /* Dil seçeneklerini aç */ })
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.language),
+                    contentDescription = "Dil Seçenekleri",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
+
+                Text(
+                    text = "Dil Seçenekleri (TR/EN)",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                )
+
+
+                Icon(
+                    painter = painterResource(id = R.drawable.git),
+                    contentDescription = "Git",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            // Şifre Güncelle
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .clickable(onClick = { navController.navigate("change_password") })
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.sifre),
+                    contentDescription = "Şifre Güncelle",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
+
+                Text(
+                    text = "Şifre Güncelle",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                )
+
+
+                Icon(
+                    painter = painterResource(id = R.drawable.git),
+                    contentDescription = "Git",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text("Satın Alınan Filmler")
-            }
-
-            Button(
-                onClick = {
-                    navController.navigate("change_password")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text("Şifre Değiştir")
-            }
 
             OutlinedButton(
                 onClick = {

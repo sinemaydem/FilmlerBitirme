@@ -88,8 +88,14 @@ fun RandomMovieScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Hangi Filmi İzleyeceğiz? Kararı Birlikte Verelim!")
-            // Film ya da varsayılan resim gösterimi
+            Text(text = "Hangi Filmi İzleyeceğiz? ",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(20.dp)
+            )
+            Text(text = " Hadi Birlikte Karar Verelim!",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(20.dp)
+                )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -113,7 +119,9 @@ fun RandomMovieScreen(
                     Image(
                         painter = rememberAsyncImagePainter(model = imageUrl),
                         contentDescription = "Film Resmi",
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .height(300.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -121,7 +129,7 @@ fun RandomMovieScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Rastgele Film Butonu
+            // FlickPicker Butonu
             Button(
                 onClick = {
                     isLoading = true
@@ -158,7 +166,7 @@ fun RandomMovieScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Seçilen Rastgele Film Detayları
+
             randomMovie?.let { movie ->
                 Column(
                     modifier = Modifier
@@ -170,10 +178,14 @@ fun RandomMovieScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Senin İçin Seçtiğimiz Film",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(20.dp)
+                    )
                     Text(
                         text = movie.name,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(20.dp)
                     )
                 }
             }
