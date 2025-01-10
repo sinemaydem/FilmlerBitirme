@@ -22,6 +22,7 @@ import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
+import com.example.filmlerbitirme.ui.viewmodel.OrdersViewModel
 import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
 import com.google.gson.Gson
 
@@ -32,6 +33,7 @@ fun SayfaGecisleri(
     detailViewModel: DetailViewModel,
     themeViewModel: ThemeViewModel,
     cartViewModel: CartViewModel,
+    ordersViewModel: OrdersViewModel,
     movieDaoRepository: MovieDaoRepository,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
@@ -129,16 +131,29 @@ fun SayfaGecisleri(
                 navController = navController
             )
         }
+
         composable(
             route = "checkout_screen/{totalPrice}",
             arguments = listOf(navArgument("totalPrice") { type = NavType.StringType })
         ) { backStackEntry ->
             val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toDoubleOrNull() ?: 0.0
-            CheckoutScreen(navController = navController, totalPrice = totalPrice)
+            CheckoutScreen(
+                navController = navController,
+                totalPrice = totalPrice,
+                viewModel = cartViewModel,
+                ordersViewModel = ordersViewModel
+            )
         }
+
         composable("coupons_screen") {
             CouponsScreen(navController = navController)
         }
 
+        composable("orders_screen") {
+            OrdersScreen(
+                navController = navController,
+                viewModel = ordersViewModel
+            )
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.example.filmlerbitirme.di
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.filmlerbitirme.data.datasource.MoviesDataSource
 import com.example.filmlerbitirme.data.repo.MovieDaoRepository
+import com.example.filmlerbitirme.data.repo.OrdersRepository
 import com.example.filmlerbitirme.retrofit.ApiUtils
 import com.example.filmlerbitirme.retrofit.MoviesDaoInterface
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
@@ -16,6 +18,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.internal.lifecycle.HiltViewModelMap
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import dagger.multibindings.IntoSet
@@ -88,6 +91,16 @@ class AppModule {
         @HiltViewModelMap.KeySet
         fun provideCartViewModelKey(): String {
             return "com.example.filmlerbitirme.ui.viewmodel.CartViewModel"
+        }
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object RepositoryModule {
+        @Provides
+        @Singleton
+        fun provideOrdersRepository(@ApplicationContext context: Context): OrdersRepository {
+            return OrdersRepository(context)
         }
     }
 }

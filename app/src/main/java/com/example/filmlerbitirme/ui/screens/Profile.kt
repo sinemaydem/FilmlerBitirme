@@ -127,9 +127,7 @@ fun Profile(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
                     .clickable(onClick = {
-
-
-                    /* Siparişlerim tıklandığında yapılacak işlem */
+                        navController.navigate("orders_screen")
 
                     })
                     .padding(16.dp),
