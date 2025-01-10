@@ -23,6 +23,7 @@ import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
 import com.example.filmlerbitirme.ui.viewmodel.OrdersViewModel
+import com.example.filmlerbitirme.ui.viewmodel.PaymentViewModel
 import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
 import com.google.gson.Gson
 
@@ -34,6 +35,7 @@ fun SayfaGecisleri(
     themeViewModel: ThemeViewModel,
     cartViewModel: CartViewModel,
     ordersViewModel: OrdersViewModel,
+    paymentViewModel: PaymentViewModel,
     movieDaoRepository: MovieDaoRepository,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
@@ -141,7 +143,8 @@ fun SayfaGecisleri(
                 navController = navController,
                 totalPrice = totalPrice,
                 viewModel = cartViewModel,
-                ordersViewModel = ordersViewModel
+                ordersViewModel = ordersViewModel,
+
             )
         }
 
@@ -155,5 +158,7 @@ fun SayfaGecisleri(
                 viewModel = ordersViewModel
             )
         }
+        composable("saved_cards") { SavedCardsScreen(navController, paymentViewModel) }
+
     }
 }

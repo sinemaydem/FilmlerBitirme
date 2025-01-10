@@ -178,10 +178,7 @@ fun Profile(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
                     .clickable(onClick = {
-
-
-                        /* Ödeme Yöntemleri tıklandığında yapılacak işlem */
-
+                        navController.navigate("saved_cards")
                     })
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically

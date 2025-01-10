@@ -162,8 +162,7 @@ fun DetailScreen(
                 Text(
                     text = gelenFilm.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
                 )
             }
 

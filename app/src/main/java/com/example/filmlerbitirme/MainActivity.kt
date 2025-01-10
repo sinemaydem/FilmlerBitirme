@@ -32,6 +32,7 @@ import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
 import com.example.filmlerbitirme.ui.viewmodel.OrdersViewModel
+import com.example.filmlerbitirme.ui.viewmodel.PaymentViewModel
 import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
     private val cartViewModel: CartViewModel by viewModels()
     private val detailViewModel: DetailViewModel by viewModels()
     private val ordersViewModel: OrdersViewModel by viewModels()
+    private val paymentViewModel: PaymentViewModel by viewModels()
 
     @Inject
     lateinit var movieDaoRepository: MovieDaoRepository
@@ -62,7 +64,8 @@ class MainActivity : ComponentActivity() {
                         cartViewModel = cartViewModel,
                         movieDaoRepository = movieDaoRepository,
                         themeViewModel = themeViewModel,
-                        ordersViewModel = ordersViewModel
+                        ordersViewModel = ordersViewModel,
+                        paymentViewModel = paymentViewModel
                     )
                 }
             }

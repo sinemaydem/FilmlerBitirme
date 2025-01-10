@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.filmlerbitirme.data.entity.Coupon
+import com.example.filmlerbitirme.data.entity.PaymentCard
 import com.example.filmlerbitirme.ui.theme.jersey
 import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.OrdersViewModel
@@ -57,6 +61,7 @@ fun CheckoutScreen(
     var couponCode by remember { mutableStateOf("") }
     var discountedPrice by remember { mutableStateOf(totalPrice) }
     var appliedCoupon by remember { mutableStateOf<Coupon?>(null) }
+    var selectedCard by remember { mutableStateOf<PaymentCard?>(null) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val cartMovies by viewModel.cartList.observeAsState(emptyList())
@@ -66,7 +71,6 @@ fun CheckoutScreen(
         Coupon("WELCOME10", 10, null, true, "Tek kullanımlık %10 indirim"),
         Coupon("SUMMER15", 15, null, false, "Tüm filmlerde %15 indirim")
     )
-
 
     fun applyCoupon(code: String) {
         val coupon = coupons.find { it.code.equals(code, ignoreCase = true) }
@@ -103,7 +107,6 @@ fun CheckoutScreen(
                                 "Ödeme",
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontFamily = jersey,
                                 fontSize = 30.sp,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -135,6 +138,12 @@ fun CheckoutScreen(
                 text = "Sipariş Özeti",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
+            )
+
+            // Ödeme Yöntemi
+            PaymentCardSection(
+                selectedCard = selectedCard,
+                onCardSelect = { selectedCard = it }
             )
 
             // Ara Toplam
@@ -193,11 +202,17 @@ fun CheckoutScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+
 
             // Ödeme Yap Butonu
             Button(
                 onClick = {
+                    if (selectedCard == null) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Lütfen bir ödeme yöntemi seçin.")
+                        }
+                        return@Button
+                    }
                     scope.launch {
                         ordersViewModel.addOrder(
                             cartItems = cartMovies,
@@ -227,6 +242,65 @@ fun CheckoutScreen(
             ) {
                 Text("Kuponlarımı Görüntüle")
             }
+        }
+    }
+}
+
+
+@Composable
+fun PaymentCardSection(
+    selectedCard: PaymentCard?,
+    onCardSelect: (PaymentCard) -> Unit
+) {
+    val dummyCards = listOf(
+        PaymentCard("1234 5678 9012 3456", "Sinem Aydemir", "12/25", "123"),
+        PaymentCard("9876 5432 1098 7654", "Ayşe Yılmaz", "11/24", "456")
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+    ) {
+        Text(
+            text = "Ödeme Yöntemi",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+
+        if (selectedCard != null) {
+            SavedCardItem(
+                card = selectedCard,
+                isSelected = true,
+                onSelect = {}
+            )
+        } else {
+            Text(
+                text = "Henüz bir kart seçilmedi.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        // Kullanıcıya kart seçme veya ekleme seçeneği
+        OutlinedButton(
+            onClick = {
+                // Sahte kartlardan birini seçme
+                val selectedDummyCard = dummyCards.firstOrNull()
+                if (selectedDummyCard != null) {
+                    onCardSelect(selectedDummyCard)
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Kart Ekle"
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(if (selectedCard == null) "Kart Seç" else "Kartı Değiştir")
         }
     }
 }

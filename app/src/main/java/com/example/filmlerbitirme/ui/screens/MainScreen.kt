@@ -15,6 +15,7 @@ import com.example.filmlerbitirme.ui.viewmodel.CartViewModel
 import com.example.filmlerbitirme.ui.viewmodel.DetailViewModel
 import com.example.filmlerbitirme.ui.viewmodel.HomeViewModel
 import com.example.filmlerbitirme.ui.viewmodel.OrdersViewModel
+import com.example.filmlerbitirme.ui.viewmodel.PaymentViewModel
 import com.example.filmlerbitirme.ui.viewmodel.ThemeViewModel
 
 @Composable
@@ -24,6 +25,7 @@ fun MainScreen(
     cartViewModel: CartViewModel,
     ordersViewModel: OrdersViewModel,
     movieDaoRepository: MovieDaoRepository,
+    paymentViewModel: PaymentViewModel,
     authViewModel: AuthViewModel,
     themeViewModel: ThemeViewModel
 ) {
@@ -63,7 +65,9 @@ fun MainScreen(
                 bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp,
                 top = innerPadding.calculateTopPadding()
             ),
-            navController = navController
+            navController = navController,
+            paymentViewModel = paymentViewModel
+
         )
     }
 }
