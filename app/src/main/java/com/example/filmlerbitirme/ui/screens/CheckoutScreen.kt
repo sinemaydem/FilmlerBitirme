@@ -183,15 +183,6 @@ fun CheckoutScreen(
             )
 
             }
-            /*Button(
-                onClick = { navController.navigate("coupons_screen") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text("Kuponlarımı Görüntüle")
-            }*/
 
             Button(
                 onClick = { applyCoupon(couponCode) },

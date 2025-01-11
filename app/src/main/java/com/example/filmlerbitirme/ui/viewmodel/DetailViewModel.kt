@@ -84,7 +84,7 @@ class DetailViewModel @Inject constructor(
                 }
 
                 loadCartMovies(userName)
-                // Notify cart update
+
                 sharedCartManager.notifyCartUpdated()
             } catch (e: Exception) {
                 e.printStackTrace()

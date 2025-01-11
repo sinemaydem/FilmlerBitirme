@@ -20,7 +20,7 @@ class CartViewModel @Inject constructor(
     init {
         loadCartMovies()
         viewModelScope.launch {
-            // Listen for cart updates
+
             sharedCartManager.cartUpdated.collect {
                 loadCartMovies()
             }
@@ -28,26 +28,23 @@ class CartViewModel @Inject constructor(
     }
 
     fun getCurrentUser(): String {
-        // Since you're using "sinem" as a hardcoded username in loadCartMovies,
-        // we'll return the same here for consistency
         return "sinem"
     }
 
     fun clearCart() {
         viewModelScope.launch {
             try {
-                // Get current cart items
+
                 val currentCart = _cartList.value ?: emptyList()
 
-                // Delete each item from cart
+
                 currentCart.forEach { cartMovie ->
                     repository.deleteFromCart(cartMovie.cartId, cartMovie.userName)
                 }
 
-                // Reload cart (should now be empty)
+
                 loadCartMovies()
 
-                // Notify that cart has been updated
                 sharedCartManager.notifyCartUpdated()
             } catch (e: Exception) {
                 Log.e("CartDebug", "Error clearing cart", e)
@@ -72,8 +69,8 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.deleteFromCart(cartId, userName)
-                loadCartMovies() // Listeyi güncelle
-                sharedCartManager.notifyCartUpdated() // Sepet güncellemesini bildir
+                loadCartMovies()
+                sharedCartManager.notifyCartUpdated()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

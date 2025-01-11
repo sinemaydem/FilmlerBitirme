@@ -158,31 +158,13 @@ fun OrderCard(order: Order) {
                         text = "${item.name} (${item.orderAmount}x)",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    /*Text(
-                        text = "$${item.price * item.orderAmount}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )*/
+
                 }
             }
 
             Divider(modifier = Modifier.padding(vertical = 8.dp))
 
 
-           /* Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-
-            ){
-                Text(
-                    text = "İndirim",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "-$${order.totalPrice * 0.25}",
-                )
-
-            }*/
 
 
 

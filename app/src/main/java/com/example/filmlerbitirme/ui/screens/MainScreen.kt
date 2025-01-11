@@ -34,7 +34,7 @@ fun MainScreen(
 
     val showBottomBar = when (currentRoute) {
         "detaySayfa/{film}", "login", "signup", "change_password",
-        "checkout_screen/{totalPrice}", "orders_screen" -> false  // Hide bottom bar on checkout and orders screens
+        "checkout_screen/{totalPrice}", "orders_screen" -> false
         else -> true
     }
 
@@ -58,7 +58,7 @@ fun MainScreen(
             homeViewModel = homeViewModel,
             detailViewModel = detailViewModel,
             cartViewModel = cartViewModel,
-            ordersViewModel = ordersViewModel,  // Add ordersViewModel
+            ordersViewModel = ordersViewModel,
             movieDaoRepository = movieDaoRepository,
             themeViewModel = themeViewModel,
             modifier = Modifier.padding(
