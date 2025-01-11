@@ -92,7 +92,6 @@ fun ChangePasswordScreen(authViewModel: AuthViewModel, navController: NavControl
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Şifre Değiştir", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
 
             OutlinedTextField(
                 value = currentPassword,

@@ -97,7 +97,7 @@ fun CartScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Total:",
+                            text = "Toplam:",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.secondary,
                             fontSize = 23.sp
@@ -120,7 +120,7 @@ fun CartScreen(
                         shape = RoundedCornerShape(20.dp),
                     ) {
                         Text(
-                            "Checkout",
+                            "Satın Al",
                             fontSize = 20.sp
                         )
                     }
@@ -143,12 +143,12 @@ fun CartScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Your cart is empty",
+                        "Sepetiniz Boş",
                         style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { navController.navigate("anasayfa") }) {
-                        Text("Continue Shopping")
+                        Text("Alışverişe Devam Et")
                     }
                 }
             } else {

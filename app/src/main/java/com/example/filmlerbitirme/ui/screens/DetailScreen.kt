@@ -58,13 +58,13 @@ fun DetailScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            // Image and overlay content
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(600.dp)
             ) {
-                // Background image
+
                 AsyncImage(
                     model = "http://kasimadalan.pe.hu/movies/images/${gelenFilm.image}",
                     contentDescription = null,
@@ -72,7 +72,7 @@ fun DetailScreen(
                     contentScale = ContentScale.Crop
                 )
 
-                // Back button
+
                 IconButton(
                     onClick = onBackClick,
                     modifier = Modifier
@@ -87,7 +87,7 @@ fun DetailScreen(
                     )
                 }
 
-                // Movie details overlay
+
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
@@ -153,7 +153,7 @@ fun DetailScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Director: ${gelenFilm.director}",
+                    text = "Yönetmen: ${gelenFilm.director}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -181,7 +181,7 @@ fun DetailScreen(
                         "sinem"
                     )
                     scope.launch {
-                        snackbarHostState.showSnackbar("Added to cart")
+                        snackbarHostState.showSnackbar("Sepete Eklendi")
                     }
                 },
                 modifier = Modifier

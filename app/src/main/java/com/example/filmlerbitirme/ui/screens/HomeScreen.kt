@@ -86,23 +86,23 @@ fun HomeScreen(
     viewModel: HomeViewModel
 ) {
     val movies by viewModel.moviesList.observeAsState(emptyList())
-    val categories = listOf("All", "Science Fiction", "Action", "Drama", "Fantastic")
+    val categories = listOf("Hepsi", "Science Fiction", "Action", "Drama", "Fantastic")
 
-    var selectedCategory by remember { mutableStateOf("All") }
+    var selectedCategory by remember { mutableStateOf("Hepsi") }
     var searchText by remember { mutableStateOf("") }
     var sortOption by remember { mutableStateOf("None") }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isFilterMenuExpanded by remember { mutableStateOf(false) }
 
     val filteredMovies = movies
-        .filter { it.category == selectedCategory || selectedCategory == "All" }
+        .filter { it.category == selectedCategory || selectedCategory == "Hepsi" }
         .filter { it.name.contains(searchText, ignoreCase = true) }
         .let {
             when (sortOption) {
-                "Rating Ascending" -> it.sortedBy { movie -> movie.rating }
-                "Rating Descending" -> it.sortedByDescending { movie -> movie.rating }
-                "Price Ascending" -> it.sortedBy { movie -> movie.price }
-                "Price Descending" -> it.sortedByDescending { movie -> movie.price }
+                "Puan Artan" -> it.sortedBy { movie -> movie.rating }
+                "Puan Azalan" -> it.sortedByDescending { movie -> movie.rating }
+                "Fiyat Artan" -> it.sortedBy { movie -> movie.price }
+                "Fiyat Azalan" -> it.sortedByDescending { movie -> movie.price }
                 else -> it
             }
         }
@@ -147,7 +147,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Category: $selectedCategory",
+                            text = "Kategori: $selectedCategory",
                             modifier = Modifier
                                 .clickable { isDropdownExpanded = true }
                                 .padding(8.dp),
@@ -183,10 +183,10 @@ fun HomeScreen(
                         offset = DpOffset(412.dp, 0.dp)
                     ) {
                         listOf(
-                            "Rating Ascending",
-                            "Rating Descending",
-                            "Price Ascending",
-                            "Price Descending"
+                            "Puan Artan",
+                            "Puan Azalan",
+                            "Fiyat Artan",
+                            "Fiyat Azalan"
                         ).forEach { option ->
                             DropdownMenuItem(
                                 onClick = {
@@ -201,7 +201,7 @@ fun HomeScreen(
                 TextField(
                     value = searchText,
                     onValueChange = { searchText = it },
-                    label = { Text("Search movies...") },
+                    label = { Text("Film ara...") },
                     leadingIcon = {
                         Icon(Icons.Default.Search, contentDescription = "Search Icon")
                     },

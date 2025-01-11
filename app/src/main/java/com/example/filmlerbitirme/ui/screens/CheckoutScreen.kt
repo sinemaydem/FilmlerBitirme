@@ -1,6 +1,7 @@
 package com.example.filmlerbitirme.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -108,7 +109,8 @@ fun CheckoutScreen(
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontSize = 30.sp,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
+                                fontFamily = jersey
                             )
                         }
                     },
@@ -163,6 +165,33 @@ fun CheckoutScreen(
                 placeholder = { Text("Kupon kodunuzu girin") },
                 modifier = Modifier.fillMaxWidth()
             )
+
+
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp)
+                    .background(MaterialTheme.colorScheme.background)
+                    .clickable {
+                        navController.navigate("coupons_screen")
+
+                    }
+
+            ){ Text("Kuponlarımı Görüntüle",
+                color = MaterialTheme.colorScheme.tertiary,
+                textAlign = TextAlign.Center
+            )
+
+            }
+            /*Button(
+                onClick = { navController.navigate("coupons_screen") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text("Kuponlarımı Görüntüle")
+            }*/
 
             Button(
                 onClick = { applyCoupon(couponCode) },
@@ -233,15 +262,7 @@ fun CheckoutScreen(
                 Text("Ödeme Yap")
             }
 
-            Button(
-                onClick = { navController.navigate("coupons_screen") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text("Kuponlarımı Görüntüle")
-            }
+
         }
     }
 }

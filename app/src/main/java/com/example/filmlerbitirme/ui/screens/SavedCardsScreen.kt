@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,24 +60,42 @@ fun SavedCardsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Kayıtlı Kartlarım",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
+            Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
+                Spacer(modifier = Modifier.height(23.dp))
+                TopAppBar(
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 56.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Ödeme Yöntemlerim",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontFamily = jersey,
+                                fontSize = 30.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Geri"
-                        )
-                    }
-                }
-            )
-        }
+                )
+            }
+        },
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -133,17 +152,20 @@ fun SavedCardItem(
             Column {
                 Text(
                     text = "**** **** **** ${card.cardNumber.takeLast(4)}",
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 15.sp
                 )
                 Text(
                     text = card.cardHolderName,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 15.sp
                 )
                 Text(
                     text = "Son Kullanma: ${card.expiryDate}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 15.sp
                 )
             }
             if (card.isDefault) {

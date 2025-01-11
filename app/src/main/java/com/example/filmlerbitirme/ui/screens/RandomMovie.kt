@@ -50,6 +50,7 @@ fun RandomMovieScreen(
     val context = LocalContext.current
     var randomMovie by remember { mutableStateOf<Movies?>(null) }
     var isLoading by remember { mutableStateOf(false) }
+    var isMovieSelected by remember { mutableStateOf(false) }
     var imageUrl by remember { mutableStateOf<String?>("R.drawable.random") }
 
     Scaffold(
@@ -71,8 +72,8 @@ fun RandomMovieScreen(
                                 "FlickPicker",
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontSize = 30.sp,
                                 fontFamily = jersey,
+                                fontSize = 30.sp,
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
@@ -101,22 +102,26 @@ fun RandomMovieScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(text = "Hangi Filmi İzleyeceğine Karar Veremedin Mi? ",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.tertiary,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Text(text = " Hadi Birlikte Karar Verelim!",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.tertiary,
-                fontWeight = FontWeight.Bold,
-
+            if (!isMovieSelected) {
+                Text(
+                    text = "Hangi Filmi İzleyeceğine Karar Veremedin Mi? ",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
+                Text(
+                    text = " Hadi Birlikte Karar Verelim!",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(450.dp)
+                    .height(if (isMovieSelected) 600.dp else 450.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .clickable {
                         randomMovie?.let { movie ->
@@ -136,9 +141,7 @@ fun RandomMovieScreen(
                     Image(
                         painter = rememberAsyncImagePainter(model = imageUrl),
                         contentDescription = "Film Resmi",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .height(400.dp),
+                        modifier = Modifier.fillMaxSize().height(450.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -146,64 +149,59 @@ fun RandomMovieScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // FlickPicker Butonu
-            Button(
-                onClick = {
-                    isLoading = true
-                    CoroutineScope(Dispatchers.IO).launch {
-                        try {
-                            val movies = movieDaoRepository.getAllMovies()
-                            val random = movies.randomOrNull()
-                            withContext(Dispatchers.Main) {
-                                randomMovie = random
-                                imageUrl = random?.image?.let {
-                                    "http://kasimadalan.pe.hu/movies/images/$it"
-                                } ?: "R.drawable.random"
-                                isLoading = false
-                            }
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                isLoading = false
-                                Toast.makeText(context, "Film yüklenemedi!", Toast.LENGTH_SHORT).show()
+            if (!isMovieSelected) {
+                Button(
+                    onClick = {
+                        isLoading = true
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val movies = movieDaoRepository.getAllMovies()
+                                val random = movies.randomOrNull()
+                                withContext(Dispatchers.Main) {
+                                    randomMovie = random
+                                    imageUrl = random?.image?.let {
+                                        "http://kasimadalan.pe.hu/movies/images/$it"
+                                    } ?: "R.drawable.random"
+                                    isMovieSelected = true
+                                    isLoading = false
+                                }
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    isLoading = false
+                                    Toast.makeText(context, "Film yüklenemedi!", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    } else {
+                        Text("FlickPicker")
                     }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                } else {
-                    Text("FlickPicker")
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-
             randomMovie?.let { movie ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            val movieJson = Gson().toJson(movie)
-                            navController.navigate("detaySayfa/$movieJson")
-                        },
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Senin İçin Seçtiğimiz Film",
+                if (isMovieSelected) {
+                    Text(
+                        text = "Senin İçin Seçtiğimiz Film",
                         style = MaterialTheme.typography.titleLarge,
-                        fontSize = 23.sp,
-                        modifier = Modifier.padding(10.dp)
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(5.dp),
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = movie.name,
                         style = MaterialTheme.typography.titleMedium,
-                        fontSize = 23.sp,
-                        modifier = Modifier.padding(10.dp)
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(5.dp),
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
