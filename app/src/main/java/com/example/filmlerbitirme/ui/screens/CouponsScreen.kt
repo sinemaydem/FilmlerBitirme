@@ -143,6 +143,10 @@ fun CouponItem(coupon: Coupon, clipboardManager: ClipboardManager) {
                 clipboardManager.setText(AnnotatedString(coupon.code))
                 Toast.makeText(context, "${coupon.code} kopyalandı!", Toast.LENGTH_SHORT).show()
             },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+        ,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -158,7 +162,8 @@ fun CouponItem(coupon: Coupon, clipboardManager: ClipboardManager) {
                 Text(
                     text = coupon.code,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.copy),
