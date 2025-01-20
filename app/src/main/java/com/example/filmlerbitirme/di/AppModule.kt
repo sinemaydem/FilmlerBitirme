@@ -25,9 +25,6 @@ import dagger.multibindings.IntoSet
 import dagger.multibindings.StringKey
 import javax.inject.Singleton
 
-
-
-
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
@@ -70,7 +67,7 @@ class AppModule {
         abstract fun bindCartViewModel(viewModel: CartViewModel): ViewModel
     }
 
-    // Activity level module for DetailViewModel
+
     @Module
     @InstallIn(ActivityRetainedComponent::class)
     object DetailViewModelKeyModule {
@@ -82,7 +79,7 @@ class AppModule {
         }
     }
 
-    // Activity level module for CartViewModel
+
     @Module
     @InstallIn(ActivityRetainedComponent::class)
     object CartViewModelKeyModule {
